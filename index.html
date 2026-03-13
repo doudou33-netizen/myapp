@@ -75,21 +75,45 @@
   <ul id="todoList"></ul>
 
   <script>
+    function saveTodos() {
+      const items = [];
+      document.querySelectorAll('#todoList li').forEach(li => {
+        items.push({
+          text: li.querySelector('span').textContent,
+          done: li.classList.contains('done')
+        });
+      });
+      localStorage.setItem('todos', JSON.stringify(items));
+    }
+
+    function createItem(text, done = false) {
+      const li = document.createElement('li');
+      if (done) li.classList.add('done');
+      li.innerHTML = `
+        <span onclick="this.parentElement.classList.toggle('done'); saveTodos()">${text}</span>
+        <button class="del" onclick="this.parentElement.remove(); saveTodos()">✕</button>
+      `;
+      document.getElementById('todoList').appendChild(li);
+    }
+
     function addTodo() {
       const input = document.getElementById('todoInput');
       const text = input.value.trim();
       if (!text) return;
-      const li = document.createElement('li');
-      li.innerHTML = `
-        <span onclick="this.parentElement.classList.toggle('done')">${text}</span>
-        <button class="del" onclick="this.parentElement.remove()">✕</button>
-      `;
-      document.getElementById('todoList').appendChild(li);
+      createItem(text);
+      saveTodos();
       input.value = '';
     }
+
     document.getElementById('todoInput').addEventListener('keypress', e => {
       if (e.key === 'Enter') addTodo();
     });
+
+    // 起動時に保存データを読み込む
+    const saved = localStorage.getItem('todos');
+    if (saved) {
+      JSON.parse(saved).forEach(item => createItem(item.text, item.done));
+    }
   </script>
 </body>
 </html>
