@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ToDoリスト</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, sans-serif;
+      background: #f0f2f5;
+      min-height: 100vh;
+    }
+    header {
+      background: #4f86f7;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .input-area {
+      display: flex;
+      padding: 16px;
+      gap: 8px;
+    }
+    input {
+      flex: 1;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      font-size: 16px;
+    }
+    button.add {
+      background: #4f86f7;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 16px;
+    }
+    ul {
+      list-style: none;
+      padding: 0 16px;
+    }
+    li {
+      background: white;
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    li.done span {
+      text-decoration: line-through;
+      color: #aaa;
+    }
+    li span { flex: 1; font-size: 16px; }
+    button.del {
+      background: none;
+      border: none;
+      color: #ff4d4d;
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+  <header>📝 ToDoリスト</header>
+  <div class="input-area">
+    <input id="todoInput" type="text" placeholder="やることを入力...">
+    <button class="add" onclick="addTodo()">追加</button>
+  </div>
+  <ul id="todoList"></ul>
+
+  <script>
+    function addTodo() {
+      const input = document.getElementById('todoInput');
+      const text = input.value.trim();
+      if (!text) return;
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <span onclick="this.parentElement.classList.toggle('done')">${text}</span>
+        <button class="del" onclick="this.parentElement.remove()">✕</button>
+      `;
+      document.getElementById('todoList').appendChild(li);
+      input.value = '';
+    }
+    document.getElementById('todoInput').addEventListener('keypress', e => {
+      if (e.key === 'Enter') addTodo();
+    });
+  </script>
+</body>
+</html>
